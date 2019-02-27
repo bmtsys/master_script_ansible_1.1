@@ -1,0 +1,56 @@
+---
+# play 1
+- name: Installing and configuring Docker
+  hosts: all
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - dockerinstall
+
+# play 2
+- name: Create a PostgreSQL DB server for Kong
+  hosts: "dbserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - createkongdb
+
+# play 3
+- name: Kong database migration
+  hosts: "dbserver"
+  any_errors_fatal: true
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - kongdbmigration
+
+# play 4
+- name: Configure Kong API gateway on application server
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - createapp
+
+# play 5
+- name: Konga database prepare
+  hosts: "dbserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - kongadbcreate
+
+# play 6
+- name: Konga Kong GUI
+  hosts: "consumerserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - konggui
+

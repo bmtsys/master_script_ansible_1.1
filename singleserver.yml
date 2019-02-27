@@ -1,0 +1,109 @@
+---
+# play 1
+- name: Installing and configuring Docker
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - dockerinstall
+
+# play 2
+- name: Create a PostgreSQL DB server for Kong
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - createkongdb
+
+# play 3
+- name: Kong database migration
+  hosts: "singleserver"
+  any_errors_fatal: true
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - kongdbmigration
+
+# play 4
+- name: Configure Kong API gateway on application server
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - createapp
+
+# play 5
+- name: Konga database prepare
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - kongadbcreate
+
+# play 7
+- name: Konga Kong GUI
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - konggui
+
+# play 8
+- name: Configuring Grafana on application server
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - grafana
+
+# play 9
+- name: Configuring Prometheus
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - prom
+
+# play 10
+- name: Configuring Portainer
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+     - portainer
+# play 11
+- name: Configuring wazuh
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - wazuh
+
+# play 12
+- name: Configuring nagios
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - nagios
+
+# play 15
+- name: Configuring centralhub
+  hosts: "singleserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: root
+  roles:
+    - centralhub
+

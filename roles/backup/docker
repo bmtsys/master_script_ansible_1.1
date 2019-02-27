@@ -1,0 +1,44 @@
+---
+- name: install docker on all nodes
+  hosts: all
+  become: yes
+  tasks:
+
+  - name: Install python-docker on Red Hat based distribution
+    yum:
+     name: python-docker
+     enablerepo: extras
+     state: latest
+    when: ansible_os_family == 'RedHat'
+  - name: 'install docker dependencies'
+    apt:
+      name: '{{ item }}'
+      state: 'present'
+    with_items:
+     - 'apt-transport-https'
+     - 'ca-certificates'
+  - name: 'add docker repo apt key'
+    apt_key:
+     url: 'https://download.docker.com/linux/ubuntu/gpg'
+     id: '9DC858229FC7DD38854AE2D88D81803C0EBFCD88'
+     state: 'present'
+    register: 'add_repository_key'
+    ignore_errors: true
+  - name: 'add Docker repository'
+    apt_repository:
+     repo: 'deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable'
+     state: 'present'
+     update_cache: 'yes' 
+  - name: 'install docker'
+    apt:
+     name: 'docker-ce=18.03.*'
+     state: 'present'
+  - name: 'enable docker systemd service'
+    service:
+     name: 'docker'
+     state: 'started'
+     enabled: 'yes'
+  - name: Create a network
+    docker_network:
+      name: kong-net
+    when: ansible_os_family == 'Debian'

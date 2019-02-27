@@ -1,0 +1,18 @@
+- name: Run database container
+  docker_container:
+    name: kongdbmigr
+    image: kong:0.14.1
+    state: started 
+    command: 'kong migrations up'
+    env:
+      KONG_PG_HOST: 3.83.90.229
+- name: Waits for port 5432 of IP to close active connections, don't start checking for 10 seconds
+  wait_for:
+    host: 3.83.90.229
+    port: 5432
+    delay: 10
+    state: drained
+#    links:
+#      - kong-database
+#  register: db_cont_metadata
+#    ignore_errors: yes

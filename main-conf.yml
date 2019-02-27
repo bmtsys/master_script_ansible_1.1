@@ -1,0 +1,36 @@
+---
+# play 4
+#- name: Configuring Grafana on application server
+#  hosts: "applicationserver"
+#  sudo: yes
+#  sudo_user: root
+#  remote_user: ubuntu
+#  roles:
+#    - grafana
+
+# play 5
+#- name: Configuring Prometheus
+#  hosts: "applicationserver"
+#  sudo: yes
+#  sudo_user: root
+#  remote_user: ubuntu
+#  roles:
+#    - prom
+#
+# play 6
+#- name: Configuring Portainer
+#  hosts: "applicationserver"
+#  sudo: yes
+#  sudo_user: root
+#  remote_user: ubuntu
+#  roles:
+#    - portainer
+# play 7
+- name: Configuring wazuh
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - wazuh
+

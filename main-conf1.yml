@@ -1,0 +1,10 @@
+---
+# play 7
+- name: Configuring nagios
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - nagios
+

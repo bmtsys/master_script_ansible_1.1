@@ -1,0 +1,117 @@
+---
+# play 1
+- name: Installing and configuring Docker
+  hosts: all
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - dockerinstall
+
+# play 2
+- name: Create a PostgreSQL DB server for Kong
+  hosts: "dbserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - createkongdb
+
+# play 3
+- name: Kong database migration
+  hosts: "dbserver"
+  any_errors_fatal: true
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - kongdbmigration
+
+# play 4
+- name: Configure Kong API gateway on application server
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - createapp
+
+# play 5
+- name: Konga database prepare
+  hosts: "dbserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - kongadbcreate
+
+# play 6
+- name: Konga Kong GUI
+  hosts: "consumerserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - konggui
+# play 7
+- name: Konga Kong GUI
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - konggui
+
+# play 8
+- name: Configuring Grafana on application server
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - grafana
+
+# play 9
+- name: Configuring Prometheus
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - prom
+
+# play 10
+- name: Configuring Portainer
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+     - portainer
+# play 11
+- name: Configuring wazuh
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - wazuh
+
+# play 12
+- name: Configuring nagios
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - nagios
+
+# play 15
+- name: Configuring centralhub
+  hosts: "applicationserver"
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - centralhub
+

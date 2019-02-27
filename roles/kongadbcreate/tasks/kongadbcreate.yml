@@ -1,0 +1,16 @@
+- name: Konga database prepare
+  docker_container:
+    name: 'kongadb'
+    image: 'bmtsys/konga_bmtech'
+    command: "-c prepare -a postgres -u postgresql://kong@34.201.250.199:5432/konga_db"
+- name: Waits for port 5432 of IP to close active connections, don't start checking for 10 seconds
+  wait_for:
+    host: 34.201.250.199
+    port: 5432
+    delay: 10
+    state: drained
+
+#    network_mode: kong-net
+#    links:
+#      - kong-database
+

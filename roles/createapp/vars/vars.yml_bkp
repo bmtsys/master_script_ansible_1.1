@@ -1,0 +1,7 @@
+image: kong:0.14.1
+name: kongapigateway
+src_port: 8000
+dest_port: 8000
+src_port1: 8001
+dest_port1: 8001
+privileged: true

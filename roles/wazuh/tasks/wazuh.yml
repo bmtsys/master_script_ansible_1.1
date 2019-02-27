@@ -1,0 +1,87 @@
+- name: Configuring Wazuh
+  docker_container:
+    name: wazuh
+    image: wazuh/wazuh
+    state: started
+    ports:
+      - "1514:1514/udp"
+      - "1515:1515"
+      - "514:514/udp"
+      - "55000:55000"
+- name: Waits for port 5000 of Logstash to close active connections, don't start checking for 10 seconds
+  wait_for:
+    host: 54.236.133.153
+    port: 5000
+    delay: 10
+    state: drained
+
+- name: Configuring Logstash
+  docker_container:
+    name: logstash
+    image: wazuh/wazuh-logstash:3.8.2_6.5.4
+    state: started
+    ports:
+      - "5000:5000"
+
+- name: Waits for port 9200 of elasticsearch to close active connections, don't start checking for 10 seconds
+  wait_for:
+    host: 54.236.133.153
+    port: 9200
+    delay: 10
+    state: drained
+
+- name: Configuring Elasticsearch
+  docker_container:
+    name: elasticsearch
+    image: wazuh/wazuh-elasticsearch:3.8.2_6.5.4
+    state: started
+    ports:
+      - "9200:9200"
+    env:
+      node.name: node-1
+      cluster.name: wazuh
+      network.host: 0.0.0.0
+      bootstrap.memory_lock: true
+      ES_JAVA_OPTS: -Xms1g -Xmx1g
+      vm.max_map_count: 262144
+
+- name: set vm.max_map_count to 262144 in sysctl
+  sysctl: name={{ item.key }} value={{ item.value }}
+  with_items:
+    - { key: "vm.max_map_count", value: "262144" }
+
+- name: Configuring Kibana
+  docker_container:
+    name: Kibana
+    image: wazuh/wazuh-kibana:3.8.2_6.5.4
+    state: started
+    ports:
+      - "5601:5601"
+    env: 
+      ELASTICSEARCH_URL: http://18.205.116.97:9200
+
+- name: Waits for port 9200 of elasticsearch to close active connections, don't start checking for 10 seconds
+  wait_for:
+    host: 54.236.133.153
+    port: 9200
+    delay: 10
+    state: drained
+
+- name: Configuring nginx
+  docker_container:
+    name: nginx
+    image: wazuh/wazuh-nginx:3.8.2_6.5.4
+    state: started
+    env:
+      NGINX_PORT: 443
+    ports:
+      - "80:80"
+      - "443:443"
+
+- name: Waits for port 5601 of Kibana to close active connections, don't start checking for 10 seconds
+  wait_for:
+    host: 54.236.133.153
+    port: 5601
+    delay: 10
+    state: drained
+

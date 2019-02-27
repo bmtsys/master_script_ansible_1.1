@@ -1,0 +1,19 @@
+---
+# play 1
+- name: Installing and configuring Docker
+  hosts: all
+  sudo: yes
+  sudo_user: root
+  remote_user: ubuntu
+  roles:
+    - dockerinstall
+
+# play 2
+#- name: Create a PostgreSQL DB server for Kong
+#  hosts: "dbserver"
+#  sudo: yes
+#  sudo_user: root
+#  remote_user: ubuntu
+#  roles:
+#    - createkongdb
+

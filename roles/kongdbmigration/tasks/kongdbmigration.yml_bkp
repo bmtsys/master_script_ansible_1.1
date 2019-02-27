@@ -1,0 +1,10 @@
+- name: Run database container
+  docker_container:
+    name: 'kongdbmigr'
+    image: 'kong:latest'
+    state: 'started' 
+    env:
+      KONG_PG_HOST: kong-database
+    links:
+      - kong-database
+  register: db_cont_metadata

@@ -1,0 +1,17 @@
+- name: Create a PostgreSQL DB server for Kong
+  docker_container:
+    name: dbforkong
+    image: postgres:9.6
+    state: started 
+    env:
+      POSTGRES_USER: kong
+      POSTGRES_DB: kong
+    ports:
+      - "5432:5432"
+- pause:
+    seconds: 30
+#    links:
+#      - kong-database
+#  register: db_cont_metadata
+#    ignore_errors: yes
+

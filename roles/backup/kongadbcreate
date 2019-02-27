@@ -1,0 +1,10 @@
+- name: Konga database prepare
+  docker_container:
+    name: 'kongadb'
+    image: 'bmtsys/konga_bmtech'
+    command: "-c prepare -a postgres -u postgresql://kong@kong-database:5432/konga_db"
+    restart: on-failure
+    network_mode: kong-net
+    links:
+      - kong-database
+

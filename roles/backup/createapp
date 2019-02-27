@@ -1,0 +1,22 @@
+- name: install Kong API Gateway
+  docker_container:
+    name: 'kongapigateway'
+    image: 'kong:0.14.1'
+    restart: always
+    network_mode: kong-net
+    env:
+      KONG_PG_HOST: kong-database
+      KONG_PROXY_LISTEN: 0.0.0.0:8000
+      KONG_PROXY_LISTEN_SSL: 0.0.0.0:8443
+      KONG_ADMIN_LISTEN: 0.0.0.0:8001
+    depends_on:
+      - kong-migration
+      - kong-database
+    ports:
+      - "8001:8001"
+      - "8000:8000"
+    health_check:
+      url: http://kong:8001
+      delay_between_tries: 5
+      max_retries: 15
+      

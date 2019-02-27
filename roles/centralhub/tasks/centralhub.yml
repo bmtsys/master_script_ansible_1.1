@@ -1,0 +1,8 @@
+- name: configuring central hub
+  docker_container:
+    name: centralhub
+    image: bmtsys/central_hub
+    state: started 
+    ports:
+      - 4000:80
+
